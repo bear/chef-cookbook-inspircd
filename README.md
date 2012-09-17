@@ -1,0 +1,2 @@
+chef-cookbook-inspircd
+======================
