@@ -31,7 +31,7 @@ bin_filepath = "#{node[:inspircd]['binary']}"
 include_recipe "build-essential"
 
 packages = value_for_platform(
-  [ "centos","redhat","fedora"] => {'default' => ['pkg-config','gnutls', 'gnutls-devel']},
+  [ "centos","redhat","fedora"] => {'default' => ['pkg-config', 'gnutls', 'gnutls-devel']},
     "default" => ['pkg-config', 'gnutls-bin', 'libgnutls-dev']
 )
 
@@ -107,19 +107,20 @@ template "inspircd.conf" do
   owner    "root"
   group    "root"
   variables(
-    :working_dir        => node[:inspircd][:prefix],
-    :binary             => node[:inspircd][:binary],
-    :conf_dir           => node[:inspircd][:conf_dir],
-    :log_dir            => node[:inspircd][:log_dir],
-    :lib_dir            => node[:inspircd][:lib_dir],
-    :pid                => node[:inspircd][:pid],
-    :ircd_user          => node[:inspircd][:user],
-    :config_file        => node[:inspircd][:conf_path],
-    :fqdn               => node[:inspircd][:fqdn],
-    :description        => node[:inspircd][:server_description],
-    :network            => node[:inspircd][:server_network],
-    :server_listen      => node[:inspircd][:listen],
-    :server_admin       => search(:ircd_admin, "*:*").first,
+    :working_dir   => node[:inspircd][:prefix],
+    :binary        => node[:inspircd][:binary],
+    :conf_dir      => node[:inspircd][:conf_dir],
+    :log_dir       => node[:inspircd][:log_dir],
+    :lib_dir       => node[:inspircd][:lib_dir],
+    :pid           => node[:inspircd][:pid],
+    :ircd_user     => node[:inspircd][:user],
+    :config_file   => node[:inspircd][:conf_path],
+    :fqdn          => node[:inspircd][:fqdn],
+    :description   => node[:inspircd][:server_description],
+    :network       => node[:inspircd][:server_network],
+    :server_listen => node[:inspircd][:listen],
+    :server_admin  => search(:ircd_admin, "*:*").first,
+    :services      => search(:ircd_services, "*:*").first,
   )
   notifies :reload, 'service[inspircd]', :immediately
 end

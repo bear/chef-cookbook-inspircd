@@ -33,6 +33,11 @@ ircd_admin
 ircd_opers:
     *.json        {"id":"oper1","hash":"secret","host":"*@localhost","type":"NetAdmin"}
 
+ircd_services:
+    services.json {"id":"services.fqdn.com",
+                   "ip":"127.0.0.1","port":"7000","allowmask":"127.0.0.1/24",
+                   "send_password":"foo","recv_password":"bar"}
+
 Recipes
 =======
 

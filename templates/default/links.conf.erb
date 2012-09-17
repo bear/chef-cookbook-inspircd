@@ -32,8 +32,8 @@
       ipaddr="localhost"
       port="7000"
       allowmask="127.0.0.0/8"
-      sendpass="penguins"
-      recvpass="polarbears">
+      sendpass="<%= @services_passwords['send'] %>"
+      recvpass="<%= @services_passwords['recv'] %>">
 
 #-#-#-#-#-#-#-#-#-#-#-#- ULINES CONFIGURATION #-#-#-#-#-#-#-#-#-#-#-#-#
 # This tag defines a ulined server. A U-Lined server has special      #

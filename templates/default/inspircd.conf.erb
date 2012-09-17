@@ -47,14 +47,14 @@
     ipv6clone="128"
 >
 
-<link name="services.tfoundry.com"
-      ipaddr="localhost"
-      port="7000"
-      allowmask="127.0.0.0/8"
-      sendpass="penguins"
-      recvpass="polarbears">
+<link name="<%= @services['id'] %>"
+      ipaddr="<%= @services['ip'] %>"
+      port="<%= @services['port'] %>"
+      allowmask="<%= @services['allowmask'] %>"
+      sendpass="<%= @services['send_password'] %>"
+      recvpass="<%= @services['recv_password'] %>">
 
-<uline server="services.tfoundry.com" silent="yes">
+<uline server="<%= @services['id'] %>" silent="yes">
 
 <banlist chan="#morons" limit="128">
 <banlist chan="*" limit="69">

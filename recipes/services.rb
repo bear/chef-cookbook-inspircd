@@ -22,14 +22,15 @@ unless(node[:anope]['default_configure_flags'])
   ]
 end
 
-inspircd_url = "http://downloads.sourceforge.net/project/anope/anope-stable/Anope-#{node[:anope]['version']}/anope-#{node[:anope]['version']}.tar.gz"
+
+anope_url    = "http://downloads.sourceforge.net/project/anope/anope-stable/Anope%20#{node[:anope]['version']}/anope-#{node[:anope]['version']}.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fanope%2Ffiles%2Fanope-stable%2FAnope%2520#{node[:anope]['version']}%2F&ts=1347904293&use_mirror=superb-dca3"
 src_filepath = "#{Chef::Config['file_cache_path'] || '/tmp'}/anope-#{node[:anope]['version']}.tar.gz"
 bin_filepath = "#{node[:anope]['binary']}"
 
 include_recipe "build-essential"
 
 packages = value_for_platform(
-  [ "centos","redhat","fedora"] => {'default' => ['pkg-config','gnutls', 'gnutls-devel']},
+  [ "centos","redhat","fedora"] => {'default' => ['pkg-config', 'gnutls', 'gnutls-devel']},
     "default" => ['pkg-config', 'gnutls-bin', 'libgnutls-dev']
 )
 
@@ -43,12 +44,6 @@ remote_file anope_url do
   backup false
 end
 
-user node[:anope]['user'] do
-  system true
-  shell  "/bin/false"
-  home   "/var/lib/anope"
-end
-
 inspircd_force_recompile = node.run_state['anope_force_recompile']
 node.run_state['anope_configure_flags'] = node[:anope]['default_configure_flags']
 
@@ -58,7 +53,7 @@ bash "compile_anope_source" do
   cwd ::File.dirname(src_filepath)
   code <<-EOH
     tar xjf #{::File.basename(src_filepath)} -C #{::File.dirname(src_filepath)}
-    cd inspircd
+    cd anope-#{node[:anope]['version']}
     ./configure #{node.run_state['anope_configure_flags'].join(" ")}
     make
     make install
@@ -93,18 +88,19 @@ template "anope.conf" do
   owner    "root"
   group    "root"
   variables(
-    :working_dir        => node[:anope][:prefix],
-    :binary             => node[:anope][:binary],
-    :conf_dir           => node[:anope][:conf_dir],
-    :log_dir            => node[:anope][:log_dir],
-    :lib_dir            => node[:anope][:lib_dir],
-    :pid                => node[:anope][:pid],
-    :ircd_user          => node[:anope][:user],
-    :config_file        => node[:anope][:conf_path],
-    :fqdn               => node[:anope][:fqdn],
-    :description        => node[:anope][:server_description],
-    :network            => node[:anope][:server_network],
-    :server_listen      => node[:anope][:listen],
+    :working_dir   => node[:anope][:prefix],
+    :binary        => node[:anope][:binary],
+    :conf_dir      => node[:anope][:conf_dir],
+    :log_dir       => node[:anope][:log_dir],
+    :lib_dir       => node[:anope][:lib_dir],
+    :pid           => node[:anope][:pid],
+    :ircd_user     => node[:anope][:user],
+    :config_file   => node[:anope][:conf_path],
+    :fqdn          => node[:anope][:fqdn],
+    :description   => node[:anope][:server_description],
+    :network       => node[:anope][:server_network],
+    :server_listen => node[:anope][:listen],
+    :services      => search(:ircd_services, "*:*").first,
   )
   notifies :reload, 'service[anope]', :immediately
 end
