@@ -47,15 +47,6 @@
     ipv6clone="128"
 >
 
-<link name="<%= @services['id'] %>"
-      ipaddr="<%= @services['ip'] %>"
-      port="<%= @services['port'] %>"
-      allowmask="<%= @services['allowmask'] %>"
-      sendpass="<%= @services['send_password'] %>"
-      recvpass="<%= @services['recv_password'] %>">
-
-<uline server="<%= @services['id'] %>" silent="yes">
-
 <banlist chan="#morons" limit="128">
 <banlist chan="*" limit="69">
 <files motd="<%= @conf_dir %>/inspircd.motd" rules="<%= @conf_dir %>/inspircd.rules">
@@ -414,3 +405,4 @@
 
 <include file="<%= @conf_dir %>/opers.conf">
 <include file="<%= @conf_dir %>/modules.conf">
+<include file="<%= @conf_dir %>/links.conf">

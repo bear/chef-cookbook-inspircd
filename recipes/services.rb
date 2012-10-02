@@ -7,7 +7,7 @@ unless(node[:anope]['prefix'])
   node.set['anope']['prefix'] = "/opt/anope-#{node[:anope]['version']}"
 end
 unless(node[:anope]['conf_path'])
-  node.set['anope']['conf_path'] = "#{node[:anope]['conf_dir']}/anope.conf"
+  node.set['anope']['conf_path'] = "#{node[:anope]['conf_dir']|/services.conf"
 end
 unless(node[:anope]['binary'])
   node.set['anope']['binary'] = "#{node[:anope]['bin_dir']}/anope"
@@ -57,18 +57,18 @@ bash "compile_anope_source" do
     ./configure #{node.run_state['anope_configure_flags'].join(" ")}
     make
     make install
-    rm -f #{node[:anope]['conf_dir']}/anope.conf
+    rm -f #{node[:anope]['conf_dir']}/services.conf
   EOH
 end
 
 node.run_state.delete(:anope_configure_flags)
 node.run_state.delete(:anope_force_recompile)
 
-template "/etc/init.d/anope" do
-  source "anope.init.erb"
+template "/etc/init.d/ircd-services" do
+  source "ircd-services.init.erb"
   mode   0755
-  owner  "root"
-  group  "root"
+  owner  "#{node[:inspircd]['user']}"
+  group  "#{node[:inspircd]['user']}"
   variables(
     :working_dir  => node[:anope][:prefix],
     :binary       => node[:anope][:binary],
@@ -82,11 +82,11 @@ template "/etc/init.d/anope" do
 end
 
 template "anope.conf" do
-  path "#{node[:anope]['conf_dir']}/anope.conf"
-  source   "anope.conf.erb"
+  path "#{node[:anope]['conf_dir']}/services.conf"
+  source   "services.conf.erb"
   mode     0644
-  owner    "root"
-  group    "root"
+  owner    "#{node[:inspircd]['user']}"
+  group    "#{node[:inspircd]['user']}"
   variables(
     :working_dir   => node[:anope][:prefix],
     :binary        => node[:anope][:binary],

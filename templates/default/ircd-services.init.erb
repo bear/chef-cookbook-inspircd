@@ -1,23 +1,21 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          anope
+# Provides:          inspircd
 # Required-Start:    $remote_fs $network $syslog $time
 # Required-Stop:     $remote_fs $syslog
 # Should-Start:      $local_fs
 # Should-Stop:       $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start Anope
-# Description:       Starts Anope services
+# Short-Description: Start inspircd
+# Description:       Starts the inspircd irc server
 ### END INIT INFO
 
-NAME="anope"
-ANOPE="<%= @binary %>"
-ANOPEPID="<%= @pid %>"
-USER="<%= @ircd_user %>"
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-
-ANOPE_ENABLED="1"
+NAME="inspircd"
+ANOPE="/usr/sbin/anoperc"
+ANOPEPID="/var/run/anope.pid"
+USER="irc"
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/var/lib/inspircd/services/modules
 
 # Define LSB log_* functions (status_of_proc)
 . /lib/lsb/init-functions
@@ -31,8 +29,8 @@ fi
 start_anope()
 {
     [ -f "$ANOPEPID" ] || ( touch "$ANOPEPID" ; chown "$USER" "$ANOPEPID" )
-        export LD_LIBRARY_PATH=<%= @lib_dir %>
-    start-stop-daemon --start --quiet --oknodo --chuid "$USER" --pidfile "$ANOPEPID" --exec "$ANOPE"
+        export LD_LIBRARY_PATH=/var/lib/inspircd
+    start-stop-daemon --start --quiet --oknodo --chuid "$USER" --pidfile "$çPID" --exec "$ANOPE" -- start
 }
 
 stop_anope()
@@ -55,18 +53,18 @@ reload_anope()
 
 case "$1" in
   start)
-        echo -n "Starting Anope... "
+        echo -n "Starting Anope Services... "
         start_anope && echo "done."
         ;;
   stop)
-        echo -n "Stopping Anope... "
+        echo -n "Stopping Anope Services... "
         stop_anope && echo "done."
         ;;
   status)
-    status_of_proc "$ANOPE" "$NAME" && exit 0 || exit $?
+    status_of_proc "$IRCD" "$NAME" && exit 0 || exit $?
     ;;
   force-reload|reload)
-        echo -n "Reloading Anope... "
+        echo -n "Reloading Anope Services... "
         reload_anope && echo "done."
         ;;
   restart)
@@ -75,7 +73,7 @@ case "$1" in
         $0 start
         ;;
   cron)
-        start_anope || echo "Anope not running, starting it"
+        start_anope || echo "Anope Services not running, starting it"
         ;;
 
   *)

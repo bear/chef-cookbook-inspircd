@@ -28,12 +28,14 @@
 
 # Link block for services. Options are the same as for the first
 # link block (depending on what your services package supports).
-<link name="services.tfoundry.com"
-      ipaddr="localhost"
-      port="7000"
-      allowmask="127.0.0.0/8"
-      sendpass="<%= @services_passwords['send'] %>"
-      recvpass="<%= @services_passwords['recv'] %>">
+
+<link name="<%= @services['id'] %>"
+      ipaddr="<%= @services['ip'] %>"
+      port="<%= @services['port'] %>"
+      allowmask="<%= @services['allowmask'] %>"
+      sendpass="<%= @services['send_password'] %>"
+      recvpass="<%= @services['recv_password'] %>">
+
 
 #-#-#-#-#-#-#-#-#-#-#-#- ULINES CONFIGURATION #-#-#-#-#-#-#-#-#-#-#-#-#
 # This tag defines a ulined server. A U-Lined server has special      #
@@ -44,4 +46,5 @@
 # not generate quit and connect notices, which can cut down on noise  #
 # to opers on the network.                                            #
 #                                                                     #
-<uline server="services.tfoundry.com" silent="yes">
+<uline server="<%= @services['id'] %>" silent="yes">
+
